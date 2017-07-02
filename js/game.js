@@ -87,7 +87,7 @@ window.onload = function() {
     var currentPosition = new Point(startPosition.x, startPosition.y);
 
     while(i > 0){
-      var rndDirection = game.rnd.integerInRange(0, 3);
+      var rndDirection = game.rnd.integerInRange(1, 4);
       // console.log("current x: " + currentPosition.x + " y: " + currentPosition.y);
       var newPosX  = currentPosition.x;
       var newPosY = currentPosition.y;
