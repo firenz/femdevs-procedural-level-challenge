@@ -292,6 +292,9 @@ window.onload = function() {
     Phaser.Sprite.call(this, game, x * tileSize, y * tileSize, 'player');
     console.log("player x: " + this.x + " y: " + this.y);
 
+    //sprite depth
+    this.z = 0;
+
     //change anchor to bottom left
     this.anchor.x = 0;
     this.anchor.y = 0;
