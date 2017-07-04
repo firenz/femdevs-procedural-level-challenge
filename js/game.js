@@ -230,12 +230,14 @@ window.onload = function() {
 
   function update(){
     this.game.physics.arcade.collide(player, wallsGroup);
+    this.game.physics.arcade.collide(player, treasure, foundedTreasure);
 
   }
 
   function render(){
     if(showDebug){
       game.debug.body(player);
+      game.debug.body(treasure);
       game.debug.body(wallsGroup);
       wallsGroup.forEachAlive(renderGroup, this);
     }
@@ -243,6 +245,15 @@ window.onload = function() {
 
   function renderGroup(member) {
     game.debug.body(member);
+  }
+
+  function foundedTreasure() {
+    console.log("Founded treasure!!\nPress F5 to regenerate dungeon.");
+
+    treasure.kill();
+
+    player.hasFoundedTreasure = true;
+    player.animations.play('founded-treasure');
   }
 
   //************************
@@ -292,6 +303,9 @@ window.onload = function() {
     Phaser.Sprite.call(this, game, x * tileSize, y * tileSize, 'player');
     console.log("player x: " + this.x + " y: " + this.y);
 
+    //another vars
+    this.hasFoundedTreasure = false;
+
     //sprite depth
     this.z = 0;
 
@@ -316,6 +330,9 @@ window.onload = function() {
     this.animations.add('down', [1, 2, 3, 4], 5, true);
     this.animations.add('right', [25, 26, 27, 28], 5, true);
     this.animations.add('left', [13, 14, 15, 16], 5, true);
+    this.animations.add('founded-treasure', [62, 63, 64], 5, true);
+
+    this.animations.play('idle-down');
 
     game.add.existing(this);
 
@@ -327,6 +344,10 @@ window.onload = function() {
   Player.prototype.constructor = Player;
 
   Player.prototype.update = function(){
+
+    //If player has founded the treeasure it can't be moved anymore
+    //if (this.hasFoundedTreasure === false) return;
+
     //Reset velocity in each update
     this.body.velocity.y = 0;
     this.body.velocity.x = 0;
@@ -479,18 +500,22 @@ window.onload = function() {
 
     game.physics.arcade.enable(this);
     this.body.setSize(tileSize, tileSize);
-    // this.body.immovable = true;
+    this.body.immovable = true;
 
     game.add.existing(this);
   };
   Treasure.prototype = Object.create(Phaser.Sprite.prototype);
   Treasure.prototype.constructor = Treasure;
-  Treasure.prototype.update = function(){
-    this.game.physics.arcade.collide(player, this, this.foundedTreasure);
-  };
-  Treasure.prototype.foundedTreasure = function(){
-    console.log("Founded treasure!!\nPress F5 to regenerate dungeon.");
-    this.destroy();
+  Treasure.prototype.kill = function(){
+    this.alive = false;
+    this.exists = false;
+    this.visible = false;
+
+    if (this.events){
+        this.events.onKilled$dispatch(this);
+    }
+
+    return this;
   };
 
 };
