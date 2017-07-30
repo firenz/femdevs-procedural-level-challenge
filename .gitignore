@@ -70,3 +70,5 @@ Temporary Items
 .vscode
 .tern-project
 Game-Development-for-Human-Beings-ebook.pdf
+jsconfig.json
+defs/
