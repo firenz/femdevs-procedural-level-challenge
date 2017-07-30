@@ -18,10 +18,10 @@ window.onload = function() {
 
   //Enum with the different directions the player can face
   var direction = {
-    up: 1,
-    down: 2,
-    left: 3,
-    right: 4
+    up: 0,
+    down: 1,
+    left: 2,
+    right: 3
   };
 
   // other game related vars
@@ -69,8 +69,8 @@ window.onload = function() {
     }
 
     startPosition = new Point(0, 0);
-    startPosition.x = game.rnd.integerInRange(0, width - 1);
-    startPosition.y = game.rnd.integerInRange(0, height - 1);
+    startPosition.x = game.rnd.integerInRange(1, width - 1);
+    startPosition.y = game.rnd.integerInRange(1, height - 1);
     // startPosition.x = Math.floor(width * 0.5);
     // startPosition.y = Math.floor(height * 0.5);
 
@@ -87,7 +87,7 @@ window.onload = function() {
     var currentPosition = new Point(startPosition.x, startPosition.y);
 
     while(i > 0){
-      var rndDirection = game.rnd.integerInRange(1, 4);
+      var rndDirection = game.rnd.integerInRange(0, 3);
       // console.log("current x: " + currentPosition.x + " y: " + currentPosition.y);
       var newPosX  = currentPosition.x;
       var newPosY = currentPosition.y;
@@ -111,10 +111,10 @@ window.onload = function() {
         break;
       }
 
-      if(newPosX < 0) newPosX = 0;
+      if(newPosX < 1) newPosX = 1;
       if(newPosX > (width - 1)) newPosX = (width - 1);
 
-      if(newPosY < 0) newPosY = 0;
+      if(newPosY < 1) newPosY = 1;
       if(newPosY > (height - 1)) newPosY = (height - 1);
 
       currentPosition.x = newPosX;
@@ -131,8 +131,8 @@ window.onload = function() {
 
   function GenerateWalls(width, height){
 
-    for(var i = 0; i < width; i++){
-      for(var j = 0; j < height; j++){
+    for(var i = 0; i < width + 1; i++){
+      for(var j = 0; j < height + 1; j++){
         var tilePosition = new Point(i, j);
 
         if(proceduralMap[i][j].currentType === tileTypes.floor){
@@ -141,14 +141,11 @@ window.onload = function() {
             for(var neighbourY = -1; neighbourY < 2; neighbourY++){
                 var neighbourPosition = new Point(tilePosition.x + neighbourX, tilePosition.y + neighbourY);
 
-                if(neighbourPosition.x > -1 && neighbourPosition.x < width && neighbourPosition.y > -1 && neighbourPosition.y < height){
+                if(neighbourPosition.x > -1 && neighbourPosition.x < width + 1 && neighbourPosition.y > -1 && neighbourPosition.y < height + 1){
                     if(proceduralMap[neighbourPosition.x][neighbourPosition.y].currentType == tileTypes.none){
 
                         proceduralMap[neighbourPosition.x][neighbourPosition.y] = new Tile(tileTypes.wall, neighbourPosition.x, neighbourPosition.y);
                     }
-                }
-                else{
-                  new Tile(tileTypes.wall, neighbourPosition.x, neighbourPosition.y);
                 }
             }
           }
@@ -225,7 +222,7 @@ window.onload = function() {
     player = new Player(startPosition.x, startPosition.y);
     treasure = new Treasure(treasurePosition.x, treasurePosition.y);
 
-    console.log("Hello!\nArrow keys moves the PJ.\nPress Z to close the \ndialogue. ", "up");
+    console.log("Hello!\nArrow keys moves the PJ.");
   }
 
   function update(){
